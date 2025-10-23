@@ -1,8 +1,8 @@
 import socket
 import threading
-import time
 import numpy as np
-import libh264decoder
+import h264decoder
+
 
 class Tello:
     """Wrapper class to interact with the Tello drone."""
@@ -22,7 +22,7 @@ class Tello:
         """
 
         self.abort_flag = False
-        self.decoder = libh264decoder.H264Decoder()
+        self.decoder = h264decoder.H264Decoder()
         self.command_timeout = command_timeout
         self.imperial = imperial
         self.response = None  
@@ -95,7 +95,7 @@ class Tello:
         Runs as a thread, sets self.frame to the most recent frame Tello captured.
 
         """
-        packet_data = ""
+        packet_data = b""
         while True:
             try:
                 res_string, ip = self.socket_video.recvfrom(2048)
@@ -104,7 +104,7 @@ class Tello:
                 if len(res_string) != 1460:
                     for frame in self._h264_decode(packet_data):
                         self.frame = frame
-                    packet_data = ""
+                    packet_data = b""
 
             except socket.error as exc:
                 print ("Caught exception socket.error : %s" % exc)
@@ -125,7 +125,7 @@ class Tello:
                 # print 'frame size %i bytes, w %i, h %i, linesize %i' % (len(frame), w, h, ls)
 
                 frame = np.fromstring(frame, dtype=np.ubyte, count=len(frame), sep='')
-                frame = (frame.reshape((h, ls / 3, 3)))
+                frame = (frame.reshape((h, ls // 3, 3)))
                 frame = frame[:, :w, :]
                 res_frame_list.append(frame)
 

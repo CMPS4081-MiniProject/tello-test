@@ -1,7 +1,7 @@
 from PIL import Image
 from PIL import ImageTk
-import Tkinter as tki
-from Tkinter import Toplevel, Scale
+import tkinter as tki
+from tkinter import Toplevel, Scale
 import threading
 import datetime
 import cv2
@@ -43,17 +43,17 @@ class TelloUI:
         self.btn_snapshot = tki.Button(self.root, text="Snapshot!",
                                        command=self.takeSnapshot)
         self.btn_snapshot.pack(side="bottom", fill="both",
-                               expand="yes", padx=10, pady=5)
+                               expand=True, padx=10, pady=5)
 
         self.btn_pause = tki.Button(self.root, text="Pause", relief="raised", command=self.pauseVideo)
         self.btn_pause.pack(side="bottom", fill="both",
-                            expand="yes", padx=10, pady=5)
+                            expand=True, padx=10, pady=5)
 
         self.btn_landing = tki.Button(
             self.root, text="Open Command Panel", relief="raised", command=self.openCmdWindow)
         self.btn_landing.pack(side="bottom", fill="both",
-                              expand="yes", padx=10, pady=5)
-        
+                              expand=True, padx=10, pady=5)
+
         # start a thread that constantly pools the video sensor for
         # the most recently read frame
         self.stopEvent = threading.Event()
@@ -97,7 +97,7 @@ class TelloUI:
                     thread_tmp = threading.Thread(target=self._updateGUIImage,args=(image,))
                     thread_tmp.start()
                     time.sleep(0.03)                                                            
-        except RuntimeError, e:
+        except RuntimeError as e:
             print("[INFO] caught a RuntimeError")
 
            
@@ -158,12 +158,12 @@ class TelloUI:
         self.btn_landing = tki.Button(
             panel, text="Land", relief="raised", command=self.telloLanding)
         self.btn_landing.pack(side="bottom", fill="both",
-                              expand="yes", padx=10, pady=5)
+                              expand=True, padx=10, pady=5)
 
         self.btn_takeoff = tki.Button(
             panel, text="Takeoff", relief="raised", command=self.telloTakeOff)
         self.btn_takeoff.pack(side="bottom", fill="both",
-                              expand="yes", padx=10, pady=5)
+                              expand=True, padx=10, pady=5)
 
         # binding arrow keys to drone control
         self.tmp_f = tki.Frame(panel, width=100, height=2)
@@ -181,7 +181,7 @@ class TelloUI:
         self.btn_landing = tki.Button(
             panel, text="Flip", relief="raised", command=self.openFlipWindow)
         self.btn_landing.pack(side="bottom", fill="both",
-                              expand="yes", padx=10, pady=5)
+                              expand=True, padx=10, pady=5)
 
         self.distance_bar = Scale(panel, from_=0.02, to=5, tickinterval=0.01, digits=3, label='Distance(m)',
                                   resolution=0.01)
@@ -192,7 +192,7 @@ class TelloUI:
                                        command=self.updateDistancebar,
                                        )
         self.btn_distance.pack(side="left", fill="both",
-                               expand="yes", padx=10, pady=5)
+                               expand=True, padx=10, pady=5)
 
         self.degree_bar = Scale(panel, from_=1, to=360, tickinterval=10, label='Degree')
         self.degree_bar.set(30)
@@ -200,7 +200,7 @@ class TelloUI:
 
         self.btn_distance = tki.Button(panel, text="Reset Degree", relief="raised", command=self.updateDegreebar)
         self.btn_distance.pack(side="right", fill="both",
-                               expand="yes", padx=10, pady=5)
+                               expand=True, padx=10, pady=5)
 
     def openFlipWindow(self):
         """
@@ -213,22 +213,22 @@ class TelloUI:
         self.btn_flipl = tki.Button(
             panel, text="Flip Left", relief="raised", command=self.telloFlip_l)
         self.btn_flipl.pack(side="bottom", fill="both",
-                            expand="yes", padx=10, pady=5)
+                            expand=True, padx=10, pady=5)
 
         self.btn_flipr = tki.Button(
             panel, text="Flip Right", relief="raised", command=self.telloFlip_r)
         self.btn_flipr.pack(side="bottom", fill="both",
-                            expand="yes", padx=10, pady=5)
+                            expand=True, padx=10, pady=5)
 
         self.btn_flipf = tki.Button(
             panel, text="Flip Forward", relief="raised", command=self.telloFlip_f)
         self.btn_flipf.pack(side="bottom", fill="both",
-                            expand="yes", padx=10, pady=5)
+                            expand=True, padx=10, pady=5)
 
         self.btn_flipb = tki.Button(
             panel, text="Flip Backward", relief="raised", command=self.telloFlip_b)
         self.btn_flipb.pack(side="bottom", fill="both",
-                            expand="yes", padx=10, pady=5)
+                            expand=True, padx=10, pady=5)
        
     def takeSnapshot(self):
         """
@@ -304,42 +304,42 @@ class TelloUI:
 
     def updateDistancebar(self):
         self.distance = self.distance_bar.get()
-        print 'reset distance to %.1f' % self.distance
+        print('reset distance to %.1f' % self.distance)
 
     def updateDegreebar(self):
         self.degree = self.degree_bar.get()
-        print 'reset distance to %d' % self.degree
+        print('reset distance to %d' % self.degree)
 
     def on_keypress_w(self, event):
-        print "up %d m" % self.distance
+        print("up %d m" % self.distance)
         self.telloUp(self.distance)
 
     def on_keypress_s(self, event):
-        print "down %d m" % self.distance
+        print("down %d m" % self.distance)
         self.telloDown(self.distance)
 
     def on_keypress_a(self, event):
-        print "ccw %d degree" % self.degree
+        print("ccw %d degree" % self.degree)
         self.tello.rotate_ccw(self.degree)
 
     def on_keypress_d(self, event):
-        print "cw %d m" % self.degree
+        print("cw %d m" % self.degree)
         self.tello.rotate_cw(self.degree)
 
     def on_keypress_up(self, event):
-        print "forward %d m" % self.distance
+        print("forward %d m" % self.distance)
         self.telloMoveForward(self.distance)
 
     def on_keypress_down(self, event):
-        print "backward %d m" % self.distance
+        print("backward %d m" % self.distance)
         self.telloMoveBackward(self.distance)
 
     def on_keypress_left(self, event):
-        print "left %d m" % self.distance
+        print("left %d m" % self.distance)
         self.telloMoveLeft(self.distance)
 
     def on_keypress_right(self, event):
-        print "right %d m" % self.distance
+        print("right %d m" % self.distance)
         self.telloMoveRight(self.distance)
 
     def on_keypress_enter(self, event):
